@@ -49,7 +49,9 @@ const pintarCards = data =>{
             templateCard.querySelector('.one').setAttribute("src",imagenes[0])
             templateCard.querySelector('.two').setAttribute("src",imagenes[1]) 
             templateCard.querySelector('.three').setAttribute("src",imagenes[2])
-         }
+            templateCard.querySelector('.four').setAttribute("src",imagenes[3])
+
+        }
 
         const clone = templateCard.cloneNode(true)
         fragment.appendChild(clone)  
