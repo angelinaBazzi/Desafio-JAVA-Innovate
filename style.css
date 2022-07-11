@@ -13,6 +13,9 @@
     margin-left: auto;
     margin-right: auto;
 }
+.card__product{
+    padding: 30px;
+}
 .head{
     background-color: rgb(0, 0, 0);
     height: 20px;
@@ -127,36 +130,143 @@
     height: 440px;
     color: chocolate;
 }
-.card-variants{
-    max-width: 40px;
-    height: 40px;
-    width: 100%;
-    border-radius: 50px;
+.imagesContainer{
+    width: 50px;
+     border-radius:50%;
+     height: 50px;
 }
-.precio{
- float: right;
+.col{
+    margin-left: 50px;
 }
-
-
-.card__product button {
+.card_button {
+    margin-top: -70px;
     position: absolute;
-    margin-top:-60px;
-    margin-left: 40px;
-    transform: translate(-0%, 0%) scale(0);
-    }
-    
-    
-.card__product:hover button,
-.card__product.hover button {
-    opacity: 0.9;
-    transform: translate(-0%,0%) scale(1);
-    }
-
-.card_button:hover button,
-.card_button.hover button{
-    opacity: 0.1;
 }
-.card__product:hover img,
-.card__product.hover img{
-    width: 103%;
+.btn-dark{
+    width: 400px;
+    margin-left: 40px;
+}
+.shoppingButton{
+    display: flex;
+    justify-content: center;
+}
+  .card_button a span:first-child {
+    display: inline-block;
+    padding: 10px;
+  }
+  .card_button  a {
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+   
+  .card_button a span:last-child {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-100%);
+  }
+  .card_button a span {
+    transition: transform 0.2s ease-out;
+  }
+   
+  .card_button a:hover span:first-child {
+    transform: translateY(100%);
+  }
+   
+  .card_button a:hover span:last-child {
+    transform: none;
+  }
+  .card_button [data-animation="to-top"] a span:last-child {
+    transform: translateY(100%);
+  }
+
+.slider:hover .images {
+    -webkit-transform:scale(1.1);transform:scale(1.1);
+}
+.slider {
+    overflow:hidden;
+    position: relative;
+}
+
+.slider .shoppingButton{
+    visibility: hidden;
+    /* Position the tooltip */
+}
+
+
+.slider:hover .shoppingButton {
+    visibility: visible;
+  }
+  /* Fav */
+.fav{
+    position: absolute;
+    display: flex;
+    right: 0px;
+    top: 10px;
+    cursor: pointer;
+}
+
+
+/* Carousel */
+.carousel{
+    width: 450px;
+    height: 600px;
+    overflow: hidden;
+    margin:auto;
+    align-content: center;
+    padding: auto;
+}
+.images{
+    display: flex;
+    transform: translateY(0);
+    transition: transform 1s ease-in-out;
+}
+
+/*Controls*/
+.controls{
+    display: flex;
+    position: absolute;
+    margin-top:-300px;
+    justify-content: space-between;
+    max-width: 450px;
+    width: 100%;
+    
+}
+.btn{
+     cursor: pointer;
+}
+
+.prev{
+    width: 20px;
+
+}
+.next{
+    width: 20px;
+
+}
+/* Price */
+.prueba{
+    display: flex;
+    justify-content: space-between;
+}
+.price{
+    font-size: 20px;
+}
+/* favoriteAlert */
+.favoriteAlert{
+    width: 100%;
+    background-color: yellowgreen;
+    height: 50px;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    position:fixed;
+    padding-top: 10px;
+    bottom: 0px;
 }

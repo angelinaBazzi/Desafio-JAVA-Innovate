@@ -12,6 +12,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 
         <title>Innovate</title>
+        
 
     </head>
     <body>    
@@ -61,45 +62,76 @@
                     <div class="card__filters count">
                         <div class="line"></div> &nbsp;&nbsp; &nbsp;&nbsp;
                         <div> Mostrando de 24 productos</div>
+                    
                     </div>
                 </div>
                 <div id="card__scroll">
                     <div class="row" id="products"></div>
-
-
                 </div>
                 
-                        </template>
                         <template id ="template-card">
                             <div class="col -12 mb-2 col-mb-1">
-                                <div class="card__product">
-                                
-                                    <img src="" alt="" class="card-img-top">
-                                    <div class="card_button">
-                                        <button class="btn btn-dark ">Añadir al carrito</button>
-                                    
+                                <div class="card__product"> 
+                                    <div>  
+                                        <!-- Carousel  -->
+                                        <main class="carousel">
+                                            <!-- Images -->
+                                            <div class="slider">
+                                                <article class="images">
+                                                    
+                                                </article>
+                                                <!--  Shopping button -->
+                                                <div class="shoppingButton">
+                                                    <section class="card_button">
+                                                        <div>
+                                                            <a>
+                                                                <button class="btn btn-dark">
+                                                                    <span class="carrito">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" viewBox="0 0 16 20">
+                                                                            <path id="cart" d="M10,17h8a1,1,0,1,1,0,2H9a1,1,0,0,1-1-1V5H7A1,1,0,0,1,7,3H9a1,1,0,0,1,1,1V6h9.927A2.037,2.037,0,0,1,22,8a1.948,1.948,0,0,1-.05.434l-1.151,5A2.057,2.057,0,0,1,18.775,15H10Zm-.5,6A1.5,1.5,0,1,1,11,21.5,1.5,1.5,0,0,1,9.5,23Zm9,0A1.5,1.5,0,1,1,20,21.5,1.5,1.5,0,0,1,18.5,23ZM10,8v5h8.831L20,8Z" transform="translate(-6 -3)" fill="#fff" fill-rule="evenodd"/>
+                                                                          </svg>
+                                                                         Añadir al carrito
+                                                                    </span>
+                                                                    <span class="talles"></span>
+                                                                </button>
+                                                            </a>
+                                                        </div>
+                                                    </section>
+                                                </div>
+                                            </div>
+                                            <!-- Controls -->
+                                            <nav class="controls">
+                                                <button class="btn prev"><</button>
+                                                <button class="btn next">></button>
+                                            </nav>
+                                            <!-- Favorte -->
+                                            <div class="fav">                               
+                                                <!-- <span class="material-symbols-outlined" id="fav">favorite</span> --> 
+                                                <img src="https://cdn.shopify.com/s/files/1/0605/7970/9179/files/icon-favorito.svg?v=1636133811" class="material-symbols-outlined" id="fav">   
+                                                <img style="display: none;" id="wish_btn_filled-camisa-jackson" src="https://cdn.shopify.com/s/files/1/0605/7970/9179/files/icon-favorito2.svg?v=1636133850" class="full-icon">                                      
+                                            </div>  
+                                            
+                                        </main>
                                     </div>
-
-
-
-                                    <div class="card-body">
-                                        <div class="card-description"></div>
-                                        <b><div class="precio"></div></b>
-                                        <div class="images-container">
-                                            <img src="" alt="" id="variant" class="card-variants one">
-                                            <img src="" alt="" id="variant" class="card-variants two">
-                                            <img src="" alt="" id="variant" class="card-variants three">
-                                            <img src="" alt="" id="variant" class="card-variants four">
-
+                                
+                                    <div class="data"></div>
+                                    <div class="body">
+                                        <div class="prueba">
+                                            <div class="description" id="a1"></div>
+                                            <b><div class="price"></div></b>
                                         </div>
+                                        <div class="imagesVariants" id="fotos"></div>
                                     </div>
                                 </div>
                             </div>
+
                         </template>
             </div>
+            <div style="display: none;"  class="favoriteAlert">
 
+            </div>
         </div>
-
+                            
     </body>
 <!--     <script src="index.js"></script>
  -->

@@ -1,0 +1,40 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.container {
+    position: relative;
+}
+
+.container .slider {
+    display: flex;
+    overflow: hidden;
+    scroll-behavior: smooth;
+}
+
+.container .slider img {
+    margin: 3px;
+}
+
+.container .control {
+    cursor: pointer;
+    object-fit: contain;
+    padding: 10px;
+}
+
+.container .prev {
+    transform: translate(-50%, -50%);
+}
+
+.container .next {
+    transform: translate(50%, -50%);
+}
