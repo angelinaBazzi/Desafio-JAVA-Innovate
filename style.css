@@ -1,6 +1,3 @@
-*{
-    margin-right: 10px;
-}
 .card{
     margin-left: auto;
     margin-right: auto;
@@ -141,10 +138,12 @@
 .card_button {
     margin-top: -70px;
     position: absolute;
+    
 }
 .btn-dark{
     width: 400px;
-    margin-left: 40px;
+    margin-left: auto;
+    margin-right: auto;
 }
 .shoppingButton{
     display: flex;
@@ -192,6 +191,7 @@
 .slider {
     overflow:hidden;
     position: relative;
+    margin-right: 0px;
 }
 
 .slider .shoppingButton{
@@ -223,6 +223,8 @@
     padding: auto;
 }
 .images{
+    object-fit: cover;
+    margin-right: 0px;
     display: flex;
     transform: translateY(0);
     transition: transform 1s ease-in-out;
@@ -269,4 +271,18 @@
     position:fixed;
     padding-top: 10px;
     bottom: 0px;
+}
+.talle{
+    margin: 3px;
+}
+
+.button_pagination{
+    display: flex;
+    justify-content: space-between;
+    max-width: 200px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.pagination{
 }

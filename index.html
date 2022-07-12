@@ -67,6 +67,10 @@
                 </div>
                 <div id="card__scroll">
                     <div class="row" id="products"></div>
+                    <div class="button_pagination">
+                        <button class="pagination">prev</button>
+                        <button class = pagination>next</button>
+                    </div>
                 </div>
                 
                         <template id ="template-card">
@@ -77,6 +81,7 @@
                                         <main class="carousel">
                                             <!-- Images -->
                                             <div class="slider">
+                                                <div class="data_colorSizeInverory"></div>
                                                 <article class="images">
                                                     
                                                 </article>
@@ -92,7 +97,8 @@
                                                                           </svg>
                                                                          Añadir al carrito
                                                                     </span>
-                                                                    <span class="talles"></span>
+                                                                    <span class="talles">
+                                                                    </span>
                                                                 </button>
                                                             </a>
                                                         </div>
@@ -106,7 +112,6 @@
                                             </nav>
                                             <!-- Favorte -->
                                             <div class="fav">                               
-                                                <!-- <span class="material-symbols-outlined" id="fav">favorite</span> --> 
                                                 <img src="https://cdn.shopify.com/s/files/1/0605/7970/9179/files/icon-favorito.svg?v=1636133811" class="material-symbols-outlined" id="fav">   
                                                 <img style="display: none;" id="wish_btn_filled-camisa-jackson" src="https://cdn.shopify.com/s/files/1/0605/7970/9179/files/icon-favorito2.svg?v=1636133850" class="full-icon">                                      
                                             </div>  
@@ -131,10 +136,8 @@
 
             </div>
         </div>
-                            
+        
     </body>
-<!--     <script src="index.js"></script>
- -->
-        <script src="app.js"></script>
-
+     <script src="index.js"></script>
+     <script src="app.js"></script>
  </html>

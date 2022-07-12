@@ -5,6 +5,11 @@ const alt = /^(#g)?\s?([a-zA-Z0-9]{1,25})\s?([a-zA-Z0-9]{1,25})?\s?([a-zA-Z0-9]{
 let imagenesColor = []
 var cont = 0 
 
+
+
+
+
+
 //Es disparado cuando el documento HTML se cargo completamente 
 document.addEventListener('DOMContentLoaded', () => {
     fetchData()
@@ -15,31 +20,36 @@ const fetchData = async () => {
     try {
         const res = await fetch('products.json')
         const data = await res.json()
-        pintarCards(data.products)
+        card_product(data.products)
+        
     }
     catch (error) {
         console.log(error)
     }
 }
 
+function muestra (){
+    console.log(muestra);
+}
+
 // arma cada product card 
-const pintarCards = data => {
+const card_product = data => {
 
     data.forEach(product => {
         templateCard.querySelector('.description').textContent = product.body_html
         templateCard.querySelector('#fav').dataset.id = product.id
-        templateCard.querySelector(".carousel").dataset.id = product.id
+        templateCard.querySelector(".slider").dataset.id = product.id
         templateCard.querySelector(".price").textContent = "$"+ product.variants[0].price// ****************** VER ********************
         let imagesColor = []
         let imagesSize = []
         let flag_color = 0
         let flag_size = 0
         arraydata = []
-
+        let variant = {} 
 
         //array donde se guardan las opciones de colores  y de talles 
         if (product.options != null) {
-            var contador = 0
+
             product.options.forEach(i => {
                 if (i.name.includes("Color")) {
                     i.values.forEach(c => {
@@ -55,7 +65,9 @@ const pintarCards = data => {
                 }
             })
         }
-        //valida las opciones X talle y color ************************************************************* VER ************************************************************
+
+
+        //flags opciones X talle y color
         if (flag_color == 0) {
             console.log("No hay opciones de colores");
         }
@@ -69,43 +81,68 @@ const pintarCards = data => {
         
         templateCard.querySelector("#fotos").innerHTML = ''
         templateCard.querySelector(".images").innerHTML = ''
+        templateCard.querySelector(".data_colorSizeInverory").innerHTML = ''
         let flag = 0
-    
-        for (a = 0; a < imagesColor.length; a++) {
+
+
+        for (let a = 0; a < imagesColor.length; a++) {
             let imgColor = []
+            let colores = []
+
             for (let i = 0; i < product.images.length; i++) {
+
                 let cadena = product.images[i].alt
                 let color = alt.exec(cadena)[8]
                 if (imagesColor[a] == color.toUpperCase()) {
                     imgColor.push(product.images[i])
-                }
+                    colores.push(product.images[i],color)                    
+                }       
             }
-            var foto = document.createElement("img")
-            foto.setAttribute("src", imgColor[0].src)
-            foto.className = "imagesContainer"
-            templateCard.querySelector('#fotos').appendChild(foto)
-            if (flag != 1) {
+            if(imgColor!=''){
+
+                //agrega images abajo
+                var foto = document.createElement("img")
+                foto.setAttribute("src", imgColor[0].src)
+                foto.className = "imagesContainer"
+
+                foto.setAttribute("id", colores[1]);
+
+                templateCard.querySelector('#fotos').appendChild(foto)
+               
+                // agrega primeras fotos por defecto del scroll 
+                if (flag != 1) {
+                    for (i = 0; i < imgColor.length; i++) {
+                        var inventory = document.createElement("div")
+                        var element = document.createElement("img")
+                        element.setAttribute("src", imgColor[i].src)
+                        element.className = "image"
+                        element.style.width ="800px"
+                        element.style.height ="600px"
+                        element.setAttribute("id", colores[1])                       
+
+                        
+                        var arrayInventory = []
+                        for(let d=0;d<product.variants.length; d ++){
+                            if(imgColor[i].id == product.variants[d].image_id ){
+                                arrayInventory.push(product.variants[d].option1,product.variants[d].option2,product.variants[d].inventory_quantity)                         
+                            }                       
+                        }
+                        inventory.dataset.array = arrayInventory
+
+                        templateCard.querySelector(".images").appendChild(element)    
+                        templateCard.querySelector(".data_colorSizeInverory").appendChild(inventory)
+                    }   
+                }
+
+                //array data
                 for (i = 0; i < imgColor.length; i++) {
-                    var element = document.createElement("img")
-                    element.setAttribute("src", imgColor[i].src)
-                    element.dataset.id = imgColor[i].id
-                    element.className = "image"
-                    
-        element.style.width ="800px"
-        element.style.height ="600px"
-                    templateCard.querySelector(".images").appendChild(element)
-                }
+                    arraydata.push(imgColor[i].src)
+                }                
+                flag = 1
+                arraydata.push('stop')
             }
-            for (i = 0; i < imgColor.length; i++) {
-                var element = document.createElement("img")
-                element.setAttribute("src", imgColor[i].src)
-                element.dataset.id = imgColor[i].id
-                element.className = "image"
-                arraydata.push(element.src)
-            }
-            flag = 1
-            arraydata.push('stop')
         }
+
         templateCard.querySelector(".data").innerHTML = ''
 
         for (i = 0; i < arraydata.length; i++) {
@@ -122,12 +159,16 @@ const pintarCards = data => {
             element.className = "talle"
             templateCard.querySelector(".talles").appendChild(element)
         }
+
         //************************************************************************
         const clone = templateCard.cloneNode(true)
         fragment.appendChild(clone)
-    })
+            
+        })
+        
     products.appendChild(fragment)
 }
+
 
 
 products.addEventListener("click", i => {
@@ -175,6 +216,7 @@ const carousel2 = e =>{
             index = images.childNodes.length -1
         }
         images.style.transform = `translateX(-${index * 450}px)`
+        
     }
     //Nav btn 
     function prevSlide (){
@@ -197,16 +239,27 @@ const carousel2 = e =>{
 
 //boton carrito
 const size = e => {
-    if (e.target.classList.contains('talle'))
-        addtalle(e.target)
+    if (e.target.classList.contains('talle')){
+        addtalle(e.target)}
+
 }
 
 const addtalle = e => {
     let object = e.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
+    let arraydata = object.querySelector(".data_colorSizeInverory").childNodes[0]
+    let arr = arraydata.dataset.array.split(',')
+    let inventory_quantity = 0
+    let color = object.parentElement.parentElement.parentElement.querySelector(".image").id
+    for (let i=0;i<arr.length;i++){
+        if(arr[i] == e.textContent){
+            inventory_quantity =arr[i+1]
+        }
+    }
 
     const product = {
         id_product: object.dataset.id,
-        id_variant: "",//??
+        inventory_quantity: inventory_quantity,
+        color: color,
         talle: e.textContent,
     } 
     console.log("agregado al carrito", product)
@@ -248,6 +301,8 @@ const setImagen = (img, object) => {
         element.className = "image"
         element.style.width ="800px"
         element.style.height ="600px"
+        element.setAttribute("id",img.id)
+
 
         object.parentElement.parentElement.querySelector(".images").appendChild(element)
     })
@@ -268,7 +323,7 @@ const favorite = object => {
     const favoriteAlert = document.querySelector(".favoriteAlert")
     favoriteAlert.textContent= "¡ Agregado a favoritos !"
     favoriteAlert.style="display:flex;"
-    console.log("id nro:", id)
+    console.log("Agregado a favoritos ID nro:", id)
 }
 
 /* 
