@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <g id="icon-arrow-01" transform="translate(20) rotate(90)">
+    <g id="arrow-ios-forward">
+      <rect id="Rectángulo_289" data-name="Rectángulo 289" width="20" height="20" transform="translate(0 20) rotate(-90)" opacity="0"/>
+      <path id="Trazado_347" data-name="Trazado 347" d="M9.833,16.662A.833.833,0,0,1,9.191,15.3l3.733-4.467-3.6-4.475A.852.852,0,1,1,10.666,5.3l4.025,5a.833.833,0,0,1,0,1.058l-4.167,5A.833.833,0,0,1,9.833,16.662Z" transform="translate(-1.5 -0.828)"/>
+    </g>
+  </g>
+</svg>

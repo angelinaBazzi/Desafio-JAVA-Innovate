@@ -1,51 +1,112 @@
 const products = document.getElementById('products')
 const templateCard = document.getElementById('template-card').content
 const fragment = document.createDocumentFragment()
-const alt = /^(#g)?\s?([a-zA-Z0-9]{1,25})\s?([a-zA-Z0-9]{1,25})?\s?([a-zA-Z0-9]{1,25})?\s?([a-zA-Z0-9]{1,25})?\s?([a-zA-Z0-9]{1,25})?\s?([a-zA-Z0-9]{1,25})?\s?#?([a-zA-Z0-9]{1,25})$/ //expresion regular de "alt"
+
+
+let btn_prev = document.getElementById("btn_prev")
+let btn_next = document.getElementById("btn_next")
 let imagenesColor = []
 var cont = 0 
-
-
-
-
+let index = 0 
+let products_per_page = 4
 
 
 //Es disparado cuando el documento HTML se cargo completamente 
 document.addEventListener('DOMContentLoaded', () => {
     fetchData()
 })
+let pro = ''
+const proo = new Map();
 
 // Trae los productos del .json
 const fetchData = async () => {
     try {
         const res = await fetch('products.json')
-        const data = await res.json()
-        card_product(data.products)
-        
+        const data = await res.json()     
+        pro= data.products
     }
     catch (error) {
         console.log(error)
+    }   
+    let page = 0      
+
+    change(index)
+    
+    document.querySelector(".card_product_info").textContent = "Mostrando " + products_per_page + " de " + pro.length + " productos."
+
+
+    function change (ind){
+        proo.clear()
+        if(ind >= 0){
+            console.log("entro");
+            page+=1
+            console.log("page",page);
+
+            for (let i = ind ; i< (ind+products_per_page) ; i++){
+                proo.set(i,pro[i])
+            }
+            document.getElementById('products').innerHTML=''        
+            
+            if (index== 0){
+                btn_prev.style = "opacity: 0.2;"
+            }else{
+                btn_prev.style = "opacity: 1;"
+            }
+        }
+        card_product(proo) 
+        setPage(page,pro.length/products_per_page)
     }
+
+    function setPage(p,np){
+        document.querySelector(".nro_pages").textContent = p +" de "+ np 
+
+    }
+
+
+    //console.log(proo.size)
+    //console.log("TUKI en 0",proo.get(0));
+    
+    
+    btn_prev.addEventListener("click", i =>{
+        index -=products_per_page   
+        change(index)
+    })
+
+    btn_next.addEventListener("click", i =>{
+        index +=products_per_page
+        change(index)
+    })
+
+
+
+
+
+
+
 }
 
-function muestra (){
-    console.log(muestra);
-}
 
 // arma cada product card 
 const card_product = data => {
 
-    data.forEach(product => {
+    data.forEach((product, key , map) => {
         templateCard.querySelector('.description').textContent = product.body_html
         templateCard.querySelector('#fav').dataset.id = product.id
         templateCard.querySelector(".slider").dataset.id = product.id
-        templateCard.querySelector(".price").textContent = "$"+ product.variants[0].price// ****************** VER ********************
+
+        // por defecto muestra el precio de la primer variante 
+        templateCard.querySelector(".price").textContent = "$"+ product.variants[0].price        
+        templateCard.querySelector(".price_compare").innerHTML = ''
+        
+        if (product.variants[0].compare_at_price != null){
+            templateCard.querySelector(".price_compare").textContent = "$"+ product.variants[0].compare_at_price
+        }
+
         let imagesColor = []
         let imagesSize = []
         let flag_color = 0
         let flag_size = 0
         arraydata = []
-        let variant = {} 
 
         //array donde se guardan las opciones de colores  y de talles 
         if (product.options != null) {
@@ -81,7 +142,6 @@ const card_product = data => {
         
         templateCard.querySelector("#fotos").innerHTML = ''
         templateCard.querySelector(".images").innerHTML = ''
-        templateCard.querySelector(".data_colorSizeInverory").innerHTML = ''
         let flag = 0
 
 
@@ -90,12 +150,12 @@ const card_product = data => {
             let colores = []
 
             for (let i = 0; i < product.images.length; i++) {
-
                 let cadena = product.images[i].alt
-                let color = alt.exec(cadena)[8]
-                if (imagesColor[a] == color.toUpperCase()) {
+                let color = cadena.split('#')
+                let color2 = color.pop().toUpperCase()
+               if (imagesColor[a] == color2) {
                     imgColor.push(product.images[i])
-                    colores.push(product.images[i],color)                    
+                    colores.push(product.images[i],color2)                    
                 }       
             }
             if(imgColor!=''){
@@ -112,47 +172,58 @@ const card_product = data => {
                 // agrega primeras fotos por defecto del scroll 
                 if (flag != 1) {
                     for (i = 0; i < imgColor.length; i++) {
-                        var inventory = document.createElement("div")
                         var element = document.createElement("img")
                         element.setAttribute("src", imgColor[i].src)
                         element.className = "image"
-                        element.style.width ="800px"
-                        element.style.height ="600px"
+                        element.style.width ="600px"
+                        element.style.height ="400px"
                         element.setAttribute("id", colores[1])                       
-
-                        
-                        var arrayInventory = []
-                        for(let d=0;d<product.variants.length; d ++){
-                            if(imgColor[i].id == product.variants[d].image_id ){
-                                arrayInventory.push(product.variants[d].option1,product.variants[d].option2,product.variants[d].inventory_quantity)                         
-                            }                       
-                        }
-                        inventory.dataset.array = arrayInventory
-
                         templateCard.querySelector(".images").appendChild(element)    
-                        templateCard.querySelector(".data_colorSizeInverory").appendChild(inventory)
-                    }   
+                        }   
                 }
 
-                //array data
+
+
+
+                // arrayInventory que contiene (idProducto , color , size , cantidad , price ,titulo)
+                var arrayInventory = []
+
                 for (i = 0; i < imgColor.length; i++) {
+                    
                     arraydata.push(imgColor[i].src)
-                }                
+                    for(let d=0;d<product.variants.length; d ++){
+                        if(imgColor[i].id == product.variants[d].image_id ){
+                            arrayInventory.push(product.variants[d].product_id,product.variants[d].option1,product.variants[d].option2,product.variants[d].inventory_quantity,product.variants[d].price,product.variants[d].title)                         
+                        }                       
+                    }
+
+                }   
+
+
+                 //carga los datos del arrayInventory al dataset en ".dataInventory"
+                arrayInventory.forEach( e =>{
+                    let el = document.createElement("div")
+                    el.dataset.array_prod = e
+                    templateCard.querySelector('.dataInventory').appendChild(el)
+                })               
+
                 flag = 1
                 arraydata.push('stop')
             }
         }
 
-        templateCard.querySelector(".data").innerHTML = ''
+        templateCard.querySelector(".srcImages").innerHTML = ''
 
+        // guarda los src de todas las imagenes del producto
         for (i = 0; i < arraydata.length; i++) {
             var element = document.createElement("img")
             element.dataset.img = arraydata[i]
-            templateCard.querySelector('.data').appendChild(element)
+            templateCard.querySelector('.srcImages').appendChild(element)
         }
 
         //carga talles
         templateCard.querySelector(".talles").innerHTML = ''
+
         for (i = 0; i < imagesSize.length; i++) {
             var element = document.createElement("div")
             element.textContent = imagesSize[i]
@@ -161,11 +232,13 @@ const card_product = data => {
         }
 
         //************************************************************************
+
+
         const clone = templateCard.cloneNode(true)
         fragment.appendChild(clone)
             
         })
-        
+
     products.appendChild(fragment)
 }
 
@@ -179,10 +252,6 @@ products.addEventListener("click", i => {
     
 })
 
-products.addEventListener("hover", i=>{
-    console.log(i);
-})
-
 document.addEventListener("click", i =>{
     document.querySelector(".favoriteAlert").style = "display:none;"
 })
@@ -191,6 +260,7 @@ document.addEventListener("click", i =>{
 const carousel = e=>{
     if (e.target.classList.contains('image')){
     carousel2(e.target)}
+    e.stopPropagation(e.target.parentElement)
 }
 
 const carousel2 = e =>{
@@ -210,13 +280,12 @@ const carousel2 = e =>{
         moveCarrousel()
     } 
     function  moveCarrousel(){
-        if (index> images.childNodes.length -1){
+        if (index > images.childNodes.length -1){
             index = 0 
         } else if (index < 0){
             index = images.childNodes.length -1
         }
-        images.style.transform = `translateX(-${index * 450}px)`
-        
+        images.style.transform = `translateX(-${index * 320}px)`     
     }
     //Nav btn 
     function prevSlide (){
@@ -241,30 +310,34 @@ const carousel2 = e =>{
 const size = e => {
     if (e.target.classList.contains('talle')){
         addtalle(e.target)}
+     e.stopPropagation(e.target.parentElement)
 
 }
 
 const addtalle = e => {
     let object = e.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
-    let arraydata = object.querySelector(".data_colorSizeInverory").childNodes[0]
-    let arr = arraydata.dataset.array.split(',')
-    let inventory_quantity = 0
-    let color = object.parentElement.parentElement.parentElement.querySelector(".image").id
-    for (let i=0;i<arr.length;i++){
-        if(arr[i] == e.textContent){
-            inventory_quantity =arr[i+1]
+    let inventory = ''
+    let price =''
+    let title = '' 
+    let color = object.querySelector(".images").childNodes[0].id
+    for(let i = 0 ; i <object.querySelector(".dataInventory").childNodes.length ; i++){
+        if(object.querySelector(".dataInventory").childNodes[i].dataset.array_prod==object.dataset.id && e.textContent == object.querySelector(".dataInventory").childNodes[i+2].dataset.array_prod && color.toUpperCase() == object.querySelector(".dataInventory").childNodes[i+1].dataset.array_prod){
+            inventory = object.querySelector(".dataInventory").childNodes[i+3].dataset.array_prod
+            price = object.querySelector(".dataInventory").childNodes[i+4].dataset.array_prod
+            title = object.querySelector(".dataInventory").childNodes[i+5].dataset.array_prod
         }
     }
-
+    
     const product = {
         id_product: object.dataset.id,
-        inventory_quantity: inventory_quantity,
+        inventory_quantity: inventory,
         color: color,
-        talle: e.textContent,
+        size: e.textContent,
+        price: '$' + price,
+        title : title
     } 
     console.log("agregado al carrito", product)
 }
-
 
 
 //cambia imagen 
@@ -275,7 +348,7 @@ const scrollImages = e => {
     e.stopPropagation(e.target, e.target.parentElement)
 }
 const setImagen = (img, object) => {
-    let data = object.parentElement.parentElement.querySelector('.data')
+    let data = object.parentElement.parentElement.querySelector('.srcImages')
     let array = []
 
     for (i = 0; i < data.childNodes.length; i++) {
@@ -294,6 +367,7 @@ const setImagen = (img, object) => {
             }
         }
     }
+
     object.parentElement.parentElement.querySelector(".images").innerHTML = ''
     array.forEach(j => {
         var element = document.createElement("img")
@@ -302,8 +376,6 @@ const setImagen = (img, object) => {
         element.style.width ="800px"
         element.style.height ="600px"
         element.setAttribute("id",img.id)
-
-
         object.parentElement.parentElement.querySelector(".images").appendChild(element)
     })
 }
