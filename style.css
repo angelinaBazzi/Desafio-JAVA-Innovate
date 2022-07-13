@@ -11,8 +11,8 @@
     margin-right: auto;
 }
 .card__product{
-    margin: 20px;
     margin-top: 30px;
+    margin-left: 10px ;
     justify-content: center;
 }
 .head{
@@ -130,19 +130,28 @@
     color: chocolate;
 }
 .imagesContainer{
-    width: 50px;
+    width: 35px;
      border-radius:50%;
-     height: 50px;
+     height: 35px;
+    margin: 5px;
 }
 .card_button {
-    margin-top: -70px;
+    margin-top: -60px;
     position: absolute;
     
 }
 .btn-dark{
-    width: 290px;
+    width: 300px;
+    height: 45px;
     margin-left: auto;
     margin-right: auto;
+}
+.carrito{
+    margin-top: -8px;
+
+}
+.talles{
+
 }
 .shoppingButton{
     display: flex;
@@ -215,7 +224,7 @@
 /* Carousel */
 .carousel{
     width: 320px;
-    height: 450px;
+    height: auto;
     overflow: hidden;
     align-content: center;
     padding: auto;
@@ -227,6 +236,8 @@
     display: flex;
     transform: translateY(0);
     transition: transform 1s ease-in-out;
+}
+.images .src {
 }
 
 /*Controls*/
@@ -276,9 +287,16 @@
     padding-top: 10px;
     bottom: 0px;
 }
-.talle{
-    margin: 3px;
+
+.talles{
+    
+
 }
+.talle{
+    position: relative;
+    margin-left: 5px;
+}
+.inventoryQuantity{}
 
 .button_pagination{
     display: flex;

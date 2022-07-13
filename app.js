@@ -5,11 +5,12 @@ const fragment = document.createDocumentFragment()
 
 let btn_prev = document.getElementById("btn_prev")
 let btn_next = document.getElementById("btn_next")
-let imagenesColor = []
 var cont = 0 
 let index = 0 
 let products_per_page = 4
 
+function show(tuka){
+    console.log(tuka);}
 
 //Es disparado cuando el documento HTML se cargo completamente 
 document.addEventListener('DOMContentLoaded', () => {
@@ -29,18 +30,16 @@ const fetchData = async () => {
         console.log(error)
     }   
     let page = 0      
-
-    change(index)
-    
+    change(index)    
     document.querySelector(".card_product_info").textContent = "Mostrando " + products_per_page + " de " + pro.length + " productos."
 
-
-    function change (ind){
+    function change (ind,flag){
         proo.clear()
         if(ind >= 0){
-            console.log("entro");
-            page+=1
-            console.log("page",page);
+            if(flag=="next"){
+            page++}else{
+                page--
+            }
 
             for (let i = ind ; i< (ind+products_per_page) ; i++){
                 proo.set(i,pro[i])
@@ -54,7 +53,7 @@ const fetchData = async () => {
             }
         }
         card_product(proo) 
-        setPage(page,pro.length/products_per_page)
+        setPage(page+2,Math.round(pro.length/products_per_page))
     }
 
     function setPage(p,np){
@@ -69,12 +68,14 @@ const fetchData = async () => {
     
     btn_prev.addEventListener("click", i =>{
         index -=products_per_page   
-        change(index)
+        let flag ="prev"
+        change(index,flag)
     })
 
     btn_next.addEventListener("click", i =>{
         index +=products_per_page
-        change(index)
+        let flag ="next"
+        change(index,flag)
     })
 
 
@@ -150,13 +151,18 @@ const card_product = data => {
             let colores = []
 
             for (let i = 0; i < product.images.length; i++) {
-                let cadena = product.images[i].alt
-                let color = cadena.split('#')
-                let color2 = color.pop().toUpperCase()
-               if (imagesColor[a] == color2) {
-                    imgColor.push(product.images[i])
-                    colores.push(product.images[i],color2)                    
-                }       
+                if (product.images[i].alt == null){
+                    console.log("El product =>",product.title," en la img => ", product.images[i].id," no se distingue el color. (Alt = null)"); 
+                }else{
+                    let cadena = product.images[i].alt
+                    let color = cadena.split('#')
+                    let color2 = color.pop().toUpperCase()
+                   if (imagesColor[a] == color2) {
+                        imgColor.push(product.images[i])
+                        colores.push(product.images[i],color2)                    
+                   }
+                }
+
             }
             if(imgColor!=''){
 
@@ -175,8 +181,7 @@ const card_product = data => {
                         var element = document.createElement("img")
                         element.setAttribute("src", imgColor[i].src)
                         element.className = "image"
-                        element.style.width ="600px"
-                        element.style.height ="400px"
+                        element.style.height ="500px"
                         element.setAttribute("id", colores[1])                       
                         templateCard.querySelector(".images").appendChild(element)    
                         }   
@@ -222,14 +227,26 @@ const card_product = data => {
         }
 
         //carga talles
+
+        
         templateCard.querySelector(".talles").innerHTML = ''
+        
+        var element = document.createElement("div")
+        element.className = "inventoryQuantity"
+        element.style = "margin-left:5px"
+        element.textContent = "Selecciona tu talle"
+
+        templateCard.querySelector(".talles").appendChild(element)
 
         for (i = 0; i < imagesSize.length; i++) {
+
             var element = document.createElement("div")
             element.textContent = imagesSize[i]
             element.className = "talle"
             templateCard.querySelector(".talles").appendChild(element)
+
         }
+        
 
         //************************************************************************
 
@@ -248,9 +265,47 @@ products.addEventListener("click", i => {
     favFunction(i)
     scrollImages(i)  //cambia imagenes por seleccion 
     size(i)
-    carousel(i)
-    
 })
+
+products.addEventListener("mouseover", i =>{
+    hover(i)
+    carousel(i)
+
+})
+
+const hover = h =>{
+    if (h.target.classList.contains('talle')){
+
+        setInventory_quantity(h.target)
+    }
+        h.stopPropagation(h.target.parentElement)
+}
+
+const setInventory_quantity = h =>{
+    let object = h.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
+    let show = object.querySelector(".inventoryQuantity")
+    let inventory = 0    
+    let color = object.querySelector(".images").childNodes[0].id
+    for(let i = 0 ; i <object.querySelector(".dataInventory").childNodes.length ; i++){
+        if(object.querySelector(".dataInventory").childNodes[i].dataset.array_prod==object.dataset.id && h.textContent == object.querySelector(".dataInventory").childNodes[i+2].dataset.array_prod && color.toUpperCase() == object.querySelector(".dataInventory").childNodes[i+1].dataset.array_prod){
+            inventory = object.querySelector(".dataInventory").childNodes[i+3].dataset.array_prod
+        }
+    }
+    if(inventory<=0){
+        show.style="color:#DF1212;margin-right:50px"
+        show.textContent= "Sin Stock"
+
+    }
+    if(inventory >=1 && inventory <= 4){        
+        show.style="color:rgb(204, 131, 78);margin-right:50px;"
+        show.textContent= "Pocas unidades"
+
+    }
+    if(inventory > 4){         
+        show.style="color:#2CB812;margin-right:50px"
+        show.textContent= "En stock"
+    }
+}
 
 document.addEventListener("click", i =>{
     document.querySelector(".favoriteAlert").style = "display:none;"
@@ -285,7 +340,7 @@ const carousel2 = e =>{
         } else if (index < 0){
             index = images.childNodes.length -1
         }
-        images.style.transform = `translateX(-${index * 320}px)`     
+        images.style.transform = `translateX(-${index * 370}px)`     //*********************************************** VER */
     }
     //Nav btn 
     function prevSlide (){
@@ -373,8 +428,8 @@ const setImagen = (img, object) => {
         var element = document.createElement("img")
         element.setAttribute("src", j)
         element.className = "image"
-        element.style.width ="800px"
-        element.style.height ="600px"
+
+        element.style.height ="500px"
         element.setAttribute("id",img.id)
         object.parentElement.parentElement.querySelector(".images").appendChild(element)
     })
