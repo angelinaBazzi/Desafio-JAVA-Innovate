@@ -131,32 +131,46 @@
 }
 .imagesContainer{
     width: 35px;
-     border-radius:50%;
-     height: 35px;
+    border-radius:50%;
+    height: 35px;
     margin: 5px;
 }
 .card_button {
-    margin-top: -60px;
+    margin-top: -20%;
     position: absolute;
-    
+    display: flex;
+    width: 100%;
+    justify-content: center;    
 }
+
 .btn-dark{
-    width: 300px;
-    height: 45px;
-    margin-left: auto;
-    margin-right: auto;
+    height: 40px;
+
 }
 .carrito{
     margin-top: -8px;
+    font-size: 75%;
 
 }
 .talles{
+    
+    font-size: 75%;
+}
 
-}
-.shoppingButton{
+.size_product{
     display: flex;
-    justify-content: center;
+    width: 100%;
+    justify-content: space-between;
+    padding-right: 5px;
 }
+
+.inventoryQuantity{
+    display: flex;
+    width: 100%;
+    padding-left: 5px;    
+}
+
+
   .card_button a span:first-child {
     display: inline-block;
     padding: 10px;
@@ -193,6 +207,8 @@
     transform: translateY(100%);
   }
 
+
+
 .slider:hover .images {
     -webkit-transform:scale(1.1);transform:scale(1.1);
 }
@@ -204,13 +220,14 @@
 
 .slider .shoppingButton{
     visibility: hidden;
-    /* Position the tooltip */
 }
 
 
 .slider:hover .shoppingButton {
     visibility: visible;
   }
+
+
   /* Fav */
 .fav{
     position: absolute;
@@ -223,12 +240,12 @@
 
 /* Carousel */
 .carousel{
-    width: 320px;
     height: auto;
     overflow: hidden;
     align-content: center;
     padding: auto;
     margin: auto;
+    width: auto;
 }
 .images{    
     object-fit: cover;
@@ -237,31 +254,24 @@
     transform: translateY(0);
     transition: transform 1s ease-in-out;
 }
-.images .src {
-}
 
 /*Controls*/
 .controls{
     display: flex;
     position: absolute;
-    margin-top:-233px;
+    margin-top:-60%;
     justify-content: space-between;
-    max-width: 320px;
+    max-width: 1000px;
     width: 100%;
-    
+    color: #929292;
+    border: none;    
 }
 .btn{
      cursor: pointer;
      border: none;
-}
+    
+    }
 
-.prev{
-    width: 80px;
-
-}
-.next{
-    width: 80px;
-}
 /* Price */
 .prueba{
     display: flex;
@@ -288,15 +298,6 @@
     bottom: 0px;
 }
 
-.talles{
-    
-
-}
-.talle{
-    position: relative;
-    margin-left: 5px;
-}
-.inventoryQuantity{}
 
 .button_pagination{
     display: flex;
@@ -306,12 +307,9 @@
     margin-left: auto;
     margin-right: auto;
 }
-.pagination{
-}
 #btn_prev{
     background: none;
     border: none;
-
 }
 #btn_next{
     background: none;

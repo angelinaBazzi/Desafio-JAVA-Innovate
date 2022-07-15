@@ -144,9 +144,18 @@
                                             <!-- Images -->
                                             <div class="slider">
                                                 <div class="dataInventory"></div>
-                                                <article class="images">
-                                                    
+                                                <article class="images">                               
                                                 </article>
+                                                <!-- Controls -->
+                                                <nav class="controls">
+                                                  <button class="btn prev"><span class="material-symbols-outlined">
+                                                      arrow_back_ios</span>
+                                                  </button>
+                                                  <button class="btn next">
+                                                      <span class="material-symbols-outlined">
+                                                          arrow_forward_ios</span>
+                                                  </button>
+                                                </nav>
                                                 <!--  Shopping button -->
                                                 <div class="shoppingButton">
                                                     <section class="card_button">
@@ -162,6 +171,8 @@
 
                                                                     <span class="talles">
                                                                       <div class="inventoryQuantity"></div>
+
+                                                                      <div class="size_product"></div>
                                                                     </span>
                                                                 </button>
                                                             </a>
@@ -169,16 +180,7 @@
                                                     </section>
                                                 </div>
                                             </div>
-                                            <!-- Controls -->
-                                            <nav class="controls">
-                                                <button class="btn prev"><span class="material-symbols-outlined">
-                                                    arrow_back_ios</span>
-                                                </button>
-                                                <button class="btn next">
-                                                    <span class="material-symbols-outlined">
-                                                        arrow_forward_ios</span>
-                                                </button>
-                                            </nav>
+                                            
                                             <!-- Favorte -->
                                             <div class="fav">                               
                                                 <img src="https://cdn.shopify.com/s/files/1/0605/7970/9179/files/icon-favorito.svg?v=1636133811" class="material-symbols-outlined" id="fav">   
@@ -203,12 +205,11 @@
 
                         </template>
             </div>
-            <div style="display: none;"  class="favoriteAlert">
-
-            </div>
+            <div style="display: none;"  class="favoriteAlert"></div>
         </div>
         
     </body>
-     <script src="index.js"></script>
-     <script src="app.js"></script>
+     <script src="index.js" type="module" ></script>
+     <script src="product_card.js"></script>
+     <script src = "products_per_page.js" type="module"></script>
  </html>

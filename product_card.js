@@ -3,92 +3,8 @@ const templateCard = document.getElementById('template-card').content
 const fragment = document.createDocumentFragment()
 
 
-let btn_prev = document.getElementById("btn_prev")
-let btn_next = document.getElementById("btn_next")
-var cont = 0 
-let index = 0 
-let products_per_page = 4
-
-function show(tuka){
-    console.log(tuka);}
-
-//Es disparado cuando el documento HTML se cargo completamente 
-document.addEventListener('DOMContentLoaded', () => {
-    fetchData()
-})
-let pro = ''
-const proo = new Map();
-
-// Trae los productos del .json
-const fetchData = async () => {
-    try {
-        const res = await fetch('products.json')
-        const data = await res.json()     
-        pro= data.products
-    }
-    catch (error) {
-        console.log(error)
-    }   
-    let page = 0      
-    change(index)    
-    document.querySelector(".card_product_info").textContent = "Mostrando " + products_per_page + " de " + pro.length + " productos."
-
-    function change (ind,flag){
-        proo.clear()
-        if(ind >= 0){
-            if(flag=="next"){
-            page++}else{
-                page--
-            }
-
-            for (let i = ind ; i< (ind+products_per_page) ; i++){
-                proo.set(i,pro[i])
-            }
-            document.getElementById('products').innerHTML=''        
-            
-            if (index== 0){
-                btn_prev.style = "opacity: 0.2;"
-            }else{
-                btn_prev.style = "opacity: 1;"
-            }
-        }
-        card_product(proo) 
-        setPage(page+2,Math.round(pro.length/products_per_page))
-    }
-
-    function setPage(p,np){
-        document.querySelector(".nro_pages").textContent = p +" de "+ np 
-
-    }
-
-
-    //console.log(proo.size)
-    //console.log("TUKI en 0",proo.get(0));
-    
-    
-    btn_prev.addEventListener("click", i =>{
-        index -=products_per_page   
-        let flag ="prev"
-        change(index,flag)
-    })
-
-    btn_next.addEventListener("click", i =>{
-        index +=products_per_page
-        let flag ="next"
-        change(index,flag)
-    })
-
-
-
-
-
-
-
-}
-
-
 // arma cada product card 
-const card_product = data => {
+export const card_product = data => {
 
     data.forEach((product, key , map) => {
         templateCard.querySelector('.description').textContent = product.body_html
@@ -107,7 +23,7 @@ const card_product = data => {
         let imagesSize = []
         let flag_color = 0
         let flag_size = 0
-        arraydata = []
+        let arraydata = []
 
         //array donde se guardan las opciones de colores  y de talles 
         if (product.options != null) {
@@ -140,6 +56,8 @@ const card_product = data => {
             console.log("no tiene opciones")
         }
 
+        templateCard.querySelector(".inventoryQuantity").innerHTML = ''
+        templateCard.querySelector(".size_product").innerHTML = ''
         
         templateCard.querySelector("#fotos").innerHTML = ''
         templateCard.querySelector(".images").innerHTML = ''
@@ -165,37 +83,55 @@ const card_product = data => {
 
             }
             if(imgColor!=''){
-
-                //agrega images abajo
+                //agrega images de variantes de colores (images abajo)
                 var foto = document.createElement("img")
                 foto.setAttribute("src", imgColor[0].src)
                 foto.className = "imagesContainer"
-
                 foto.setAttribute("id", colores[1]);
 
                 templateCard.querySelector('#fotos').appendChild(foto)
                
                 // agrega primeras fotos por defecto del scroll 
                 if (flag != 1) {
-                    for (i = 0; i < imgColor.length; i++) {
+                    for (let i = 0; i < imgColor.length; i++) {
                         var element = document.createElement("img")
                         element.setAttribute("src", imgColor[i].src)
                         element.className = "image"
-                        element.style.height ="500px"
-                        element.setAttribute("id", colores[1])                       
+                        element.dataset.width = imgColor[i].width*0.19
+                        element.style.width = imgColor[i].width*0.19+ "px "
+                        element.style.height = imgColor[i].height*0.19+ "px "                       
+                        element.setAttribute("id", colores[1]) 
                         templateCard.querySelector(".images").appendChild(element)    
+
                         }   
                 }
+                // tamaño del scroll=> imagen con mayor widht
+                var carousel =templateCard.querySelector('.carousel')
+                let flagWidht = imgColor[0].height
+                let id = 0               
 
+                for (let i=0 ; i <imgColor.length; i++){
+                    if(imgColor[i].height> flagWidht){                        
+                        id = i
+                    }
+                }
+                carousel.style.width =  imgColor[id].width*0.19 +"px"
+                carousel.style.height = imgColor[id].height*0.19+ "px "
 
+                //console.log(templateCard.querySelector(".btn-dark"));
+                templateCard.querySelector(".btn-dark").style.width = imgColor[id].width*0.18 +"px"
+                templateCard.querySelector(".size_product").style.width = (imgColor[id].width*0.18)/2 +"px"
+                
+                templateCard.querySelector(".size_product").dataset.width=(imgColor[id].width*0.18)/2 
+                templateCard.querySelector(".inventoryQuantity").style.width = (imgColor[id].width*0.18)/2 +"px"
+                templateCard.querySelector(".inventoryQuantity").dataset.width=(imgColor[id].width*0.18)/2 
 
-
-                // arrayInventory que contiene (idProducto , color , size , cantidad , price ,titulo)
+                // arrayInventory contiene => (idProducto , color , size , cantidad , price ,titulo)
                 var arrayInventory = []
 
-                for (i = 0; i < imgColor.length; i++) {
+                for (let i = 0; i < imgColor.length; i++) {
                     
-                    arraydata.push(imgColor[i].src)
+                    arraydata.push(imgColor[i].src,imgColor[i].width,imgColor[i].height)
                     for(let d=0;d<product.variants.length; d ++){
                         if(imgColor[i].id == product.variants[d].image_id ){
                             arrayInventory.push(product.variants[d].product_id,product.variants[d].option1,product.variants[d].option2,product.variants[d].inventory_quantity,product.variants[d].price,product.variants[d].title)                         
@@ -204,12 +140,11 @@ const card_product = data => {
 
                 }   
 
-
-                 //carga los datos del arrayInventory al dataset en ".dataInventory"
+                //carga los datos del arrayInventory al dataset en ".dataInventory"
                 arrayInventory.forEach( e =>{
-                    let el = document.createElement("div")
-                    el.dataset.array_prod = e
-                    templateCard.querySelector('.dataInventory').appendChild(el)
+                    let inv = document.createElement("div")
+                    inv.dataset.array_prod = e
+                    templateCard.querySelector('.dataInventory').appendChild(inv)
                 })               
 
                 flag = 1
@@ -217,10 +152,9 @@ const card_product = data => {
             }
         }
 
-        templateCard.querySelector(".srcImages").innerHTML = ''
-
         // guarda los src de todas las imagenes del producto
-        for (i = 0; i < arraydata.length; i++) {
+        templateCard.querySelector(".srcImages").innerHTML = ''
+        for (let i = 0; i < arraydata.length; i++) {
             var element = document.createElement("img")
             element.dataset.img = arraydata[i]
             templateCard.querySelector('.srcImages').appendChild(element)
@@ -228,39 +162,31 @@ const card_product = data => {
 
         //carga talles
 
-        
-        templateCard.querySelector(".talles").innerHTML = ''
-        
+               
         var element = document.createElement("div")
         element.className = "inventoryQuantity"
-        element.style = "margin-left:5px"
         element.textContent = "Selecciona tu talle"
 
-        templateCard.querySelector(".talles").appendChild(element)
+        templateCard.querySelector(".inventoryQuantity").appendChild(element)
 
-        for (i = 0; i < imagesSize.length; i++) {
-
+        for (let i = 0; i < imagesSize.length; i++) {
             var element = document.createElement("div")
             element.textContent = imagesSize[i]
-            element.className = "talle"
-            templateCard.querySelector(".talles").appendChild(element)
-
+            element.className = "size"
+            templateCard.querySelector(".size_product").appendChild(element)
         }
         
-
         //************************************************************************
 
-
         const clone = templateCard.cloneNode(true)
-        fragment.appendChild(clone)
-            
+        fragment.appendChild(clone)  
         })
 
     products.appendChild(fragment)
 }
 
 
-
+// EventListener 
 products.addEventListener("click", i => {
     favFunction(i)
     scrollImages(i)  //cambia imagenes por seleccion 
@@ -268,14 +194,18 @@ products.addEventListener("click", i => {
 })
 
 products.addEventListener("mouseover", i =>{
-    hover(i)
+    hoverSize(i)
     carousel(i)
 
 })
 
-const hover = h =>{
-    if (h.target.classList.contains('talle')){
+document.addEventListener("click", i =>{
+    document.querySelector(".favoriteAlert").style = "display:none;"
+})
 
+// show inventory quantity per size
+const hoverSize = h =>{
+    if (h.target.classList.contains('size')){
         setInventory_quantity(h.target)
     }
         h.stopPropagation(h.target.parentElement)
@@ -285,62 +215,73 @@ const setInventory_quantity = h =>{
     let object = h.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
     let show = object.querySelector(".inventoryQuantity")
     let inventory = 0    
-    let color = object.querySelector(".images").childNodes[0].id
-    for(let i = 0 ; i <object.querySelector(".dataInventory").childNodes.length ; i++){
-        if(object.querySelector(".dataInventory").childNodes[i].dataset.array_prod==object.dataset.id && h.textContent == object.querySelector(".dataInventory").childNodes[i+2].dataset.array_prod && color.toUpperCase() == object.querySelector(".dataInventory").childNodes[i+1].dataset.array_prod){
-            inventory = object.querySelector(".dataInventory").childNodes[i+3].dataset.array_prod
+    let color = object.parentElement.querySelector(".images").childNodes[0].id
+
+   for(let i = 0 ; i <object.parentElement.querySelector(".dataInventory").childNodes.length ; i++){
+        //console.log("ID PRODUCT=>",object.parentElement.querySelector(".dataInventory").childNodes[i].dataset.array_prod,object.parentElement.dataset.id);
+        //console.log("TALLE=>",h.textContent,object.parentElement.querySelector(".dataInventory").childNodes[i+2].dataset.array_prod);
+        //console.log("COLOR=>",color.toUpperCase() , object.parentElement.querySelector(".dataInventory").childNodes[i+1].dataset.array_prod);
+       
+        if(object.parentElement.querySelector(".dataInventory").childNodes[i].dataset.array_prod==object.parentElement.dataset.id &&   
+        h.textContent==object.parentElement.querySelector(".dataInventory").childNodes[i+2].dataset.array_prod &&         
+        color.toUpperCase() == object.parentElement.querySelector(".dataInventory").childNodes[i+1].dataset.array_prod){
+            inventory = object.parentElement.querySelector(".dataInventory").childNodes[i+3].dataset.array_prod
         }
     }
+    
     if(inventory<=0){
-        show.style="color:#DF1212;margin-right:50px"
+        show.style="color:#DF1212;"
+        show.style.width= show.dataset.width +"px"
         show.textContent= "Sin Stock"
-
     }
     if(inventory >=1 && inventory <= 4){        
-        show.style="color:rgb(204, 131, 78);margin-right:50px;"
+        show.style="color:rgb(204, 131, 78);"
+        show.style.width= show.dataset.width +"px"
         show.textContent= "Pocas unidades"
 
     }
     if(inventory > 4){         
-        show.style="color:#2CB812;margin-right:50px"
+        show.style="color:#2CB812;"
+        show.style.width= show.dataset.width +"px"
         show.textContent= "En stock"
     }
+
 }
 
-document.addEventListener("click", i =>{
-    document.querySelector(".favoriteAlert").style = "display:none;"
-})
 
-
+//carousel
 const carousel = e=>{
     if (e.target.classList.contains('image')){
     carousel2(e.target)}
     e.stopPropagation(e.target.parentElement)
 }
-
 const carousel2 = e =>{
 
     const images = e.parentElement.parentElement.querySelector(".images")
     const prevBtn = e.parentElement.parentElement.parentElement.querySelector(".prev")
     const nextBtn = e.parentElement.parentElement.parentElement.querySelector(".next")
-
     prevBtn.addEventListener("click", prevSlide)
     nextBtn.addEventListener("click",nextSlide)
-
+    const imageWidht = e.parentElement.parentElement.querySelector(".image").dataset.width
     let index = 0 
-    let interval = setInterval(startInterval, 0500)
+    let interval = setInterval(startInterval, 500)
 
     function startInterval(){
         index =+ 1
         moveCarrousel()
     } 
+
     function  moveCarrousel(){
+
         if (index > images.childNodes.length -1){
             index = 0 
         } else if (index < 0){
             index = images.childNodes.length -1
         }
-        images.style.transform = `translateX(-${index * 370}px)`     //*********************************************** VER */
+        
+
+        images.style.transform = `translateX(-${index * imageWidht}px)`     //*********************************************** VER */
+    
     }
     //Nav btn 
     function prevSlide (){
@@ -361,20 +302,20 @@ const carousel2 = e =>{
     }
 }
 
-//boton carrito
+//button shopping cart
 const size = e => {
-    if (e.target.classList.contains('talle')){
+    if (e.target.classList.contains('size')){
         addtalle(e.target)}
      e.stopPropagation(e.target.parentElement)
 
 }
-
 const addtalle = e => {
-    let object = e.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
+    let object = e.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
     let inventory = ''
     let price =''
     let title = '' 
     let color = object.querySelector(".images").childNodes[0].id
+    
     for(let i = 0 ; i <object.querySelector(".dataInventory").childNodes.length ; i++){
         if(object.querySelector(".dataInventory").childNodes[i].dataset.array_prod==object.dataset.id && e.textContent == object.querySelector(".dataInventory").childNodes[i+2].dataset.array_prod && color.toUpperCase() == object.querySelector(".dataInventory").childNodes[i+1].dataset.array_prod){
             inventory = object.querySelector(".dataInventory").childNodes[i+3].dataset.array_prod
@@ -394,8 +335,7 @@ const addtalle = e => {
     console.log("agregado al carrito", product)
 }
 
-
-//cambia imagen 
+//change array image carousel
 const scrollImages = e => {
     if (e.target.classList.contains('imagesContainer')) {
         setImagen(e.target, e.target.parentElement)
@@ -404,36 +344,43 @@ const scrollImages = e => {
 }
 const setImagen = (img, object) => {
     let data = object.parentElement.parentElement.querySelector('.srcImages')
+    console.log(data);
     let array = []
+    console.log("tuki");
 
-    for (i = 0; i < data.childNodes.length; i++) {
+    for (let i = 0; i < data.childNodes.length; i++) {
         let count = 0
 
         if (img.src == data.childNodes[i].dataset.img) {
-            let bandera = 0
-            for (j = i; j < (data.childNodes.length); j++) {
-                if (data.childNodes[j].dataset.img == 'stop' && bandera != 1) {
-                    bandera = 1
+            let flag = 0
+
+            for (let j = i; j < (data.childNodes.length); j++) {
+                if (data.childNodes[j].dataset.img == 'stop' && flag != 1) {
+                    flag = 1
                     count = j
                 }
             }
-            for (m = i; m < count; m++){
-                array.push(data.childNodes[m].dataset.img)
+            for (let m = i; m < count; m++){
+                array.push(data.childNodes[m].dataset.img,)
             }
         }
     }
 
     object.parentElement.parentElement.querySelector(".images").innerHTML = ''
-    array.forEach(j => {
+    console.log("ARRAY",array);
+    for (let i =0 ; i <array.length; i++) {
+        console.log("I",i);
         var element = document.createElement("img")
-        element.setAttribute("src", j)
+        element.setAttribute("src",array[i] )
         element.className = "image"
-
-        element.style.height ="500px"
+        element.style.width = array[i+1]*0.19+"px"
+        element.style.height = array[i+2]*0.19+"px"
         element.setAttribute("id",img.id)
-        object.parentElement.parentElement.querySelector(".images").appendChild(element)
-    })
+        object.parentElement.parentElement.querySelector(".images").appendChild(element) 
+        i = i+2
+    }
 }
+
 //agrega a favoritos 
 const favFunction = e => {
     if (e.target.classList.contains('material-symbols-outlined')) {
@@ -441,17 +388,20 @@ const favFunction = e => {
     }
     e.stopPropagation(e.target.parentElement)
 }
-const favorite = object => {
+ const favorite = object => {
     const fav1 = object.querySelector('.full-icon')
-    fav1.style="display:content"
+    fav1.style="display:content;"
     const fav2 = object.querySelector('#fav')
-    fav2.style = "display:none"
+    fav2.style = "display:none;"
     const id = object.querySelector('#fav').dataset.id;
     const favoriteAlert = document.querySelector(".favoriteAlert")
     favoriteAlert.textContent= "¡ Agregado a favoritos !"
     favoriteAlert.style="display:flex;"
     console.log("Agregado a favoritos ID nro:", id)
-}
+} 
+
+
+
 
 /* 
 products.addEventListener('click',e =>{
