@@ -3,21 +3,15 @@ const templateCard = document.getElementById('template-card').content
 const fragment = document.createDocumentFragment()
 
 
+//recibe los productos que debe mostrar
 // arma cada product card 
+
 export const card_product = data => {
-
     data.forEach((product, key , map) => {
-        templateCard.querySelector('.description').textContent = product.body_html
-        templateCard.querySelector('#fav').dataset.id = product.id
-        templateCard.querySelector(".slider").dataset.id = product.id
 
-        // por defecto muestra el precio de la primer variante 
-        templateCard.querySelector(".price").textContent = "$"+ product.variants[0].price        
-        templateCard.querySelector(".price_compare").innerHTML = ''
-        
-        if (product.variants[0].compare_at_price != null){
-            templateCard.querySelector(".price_compare").textContent = "$"+ product.variants[0].compare_at_price
-        }
+        //limpia y carga los template 
+        //templates de => .description, #fav, .slider, .price, price_compare || limpia =>  .inventoryQuantity .size_product #fotos .images .srcImages
+        loadTemplate (product)
 
         let imagesColor = []
         let imagesSize = []
@@ -25,168 +19,206 @@ export const card_product = data => {
         let flag_size = 0
         let arraydata = []
 
-        //array donde se guardan las opciones de colores  y de talles 
-        if (product.options != null) {
+        //array donde se guardan las opciones de colores  y de talles => options.values
+        valuesOfOptions(product.options,imagesColor,imagesSize,flag_color,flag_size)
+        //validationOptions(flag_color,flag_size,product.options)
 
-            product.options.forEach(i => {
-                if (i.name.includes("Color")) {
-                    i.values.forEach(c => {
-                        imagesColor.push(c)
-                        flag_color = +1
-                    })
-                }
-                if (i.name.includes("Talle")) {
-                    i.values.forEach(c => {
-                        imagesSize.push(c)
-                        flag_size = +1
-                    })
-                }
-            })
-        }
-
-
-        //flags opciones X talle y color
-        if (flag_color == 0) {
-            console.log("No hay opciones de colores");
-        }
-        if (flag_size == 0) {
-            console.log("No hay opciones de talles");
-        }
-        if (product.options == "") {
-            console.log("no tiene opciones")
-        }
-
-        templateCard.querySelector(".inventoryQuantity").innerHTML = ''
-        templateCard.querySelector(".size_product").innerHTML = ''
-        
-        templateCard.querySelector("#fotos").innerHTML = ''
-        templateCard.querySelector(".images").innerHTML = ''
-        let flag = 0
-
-
-        for (let a = 0; a < imagesColor.length; a++) {
-            let imgColor = []
-            let colores = []
-
-            for (let i = 0; i < product.images.length; i++) {
-                if (product.images[i].alt == null){
-                    console.log("El product =>",product.title," en la img => ", product.images[i].id," no se distingue el color. (Alt = null)"); 
-                }else{
-                    let cadena = product.images[i].alt
-                    let color = cadena.split('#')
-                    let color2 = color.pop().toUpperCase()
-                   if (imagesColor[a] == color2) {
-                        imgColor.push(product.images[i])
-                        colores.push(product.images[i],color2)                    
-                   }
-                }
-
-            }
-            if(imgColor!=''){
-                //agrega images de variantes de colores (images abajo)
-                var foto = document.createElement("img")
-                foto.setAttribute("src", imgColor[0].src)
-                foto.className = "imagesContainer"
-                foto.setAttribute("id", colores[1]);
-
-                templateCard.querySelector('#fotos').appendChild(foto)
-               
-                // agrega primeras fotos por defecto del scroll 
-                if (flag != 1) {
-                    for (let i = 0; i < imgColor.length; i++) {
-                        var element = document.createElement("img")
-                        element.setAttribute("src", imgColor[i].src)
-                        element.className = "image"
-                        element.dataset.width = imgColor[i].width*0.19
-                        element.style.width = imgColor[i].width*0.19+ "px "
-                        element.style.height = imgColor[i].height*0.19+ "px "                       
-                        element.setAttribute("id", colores[1]) 
-                        templateCard.querySelector(".images").appendChild(element)    
-
-                        }   
-                }
-                // tamaño del scroll=> imagen con mayor widht
-                var carousel =templateCard.querySelector('.carousel')
-                let flagWidht = imgColor[0].height
-                let id = 0               
-
-                for (let i=0 ; i <imgColor.length; i++){
-                    if(imgColor[i].height> flagWidht){                        
-                        id = i
-                    }
-                }
-                carousel.style.width =  imgColor[id].width*0.19 +"px"
-                carousel.style.height = imgColor[id].height*0.19+ "px "
-
-                //console.log(templateCard.querySelector(".btn-dark"));
-                templateCard.querySelector(".btn-dark").style.width = imgColor[id].width*0.18 +"px"
-                templateCard.querySelector(".size_product").style.width = (imgColor[id].width*0.18)/2 +"px"
-                
-                templateCard.querySelector(".size_product").dataset.width=(imgColor[id].width*0.18)/2 
-                templateCard.querySelector(".inventoryQuantity").style.width = (imgColor[id].width*0.18)/2 +"px"
-                templateCard.querySelector(".inventoryQuantity").dataset.width=(imgColor[id].width*0.18)/2 
-
-                // arrayInventory contiene => (idProducto , color , size , cantidad , price ,titulo)
-                var arrayInventory = []
-
-                for (let i = 0; i < imgColor.length; i++) {
-                    
-                    arraydata.push(imgColor[i].src,imgColor[i].width,imgColor[i].height)
-                    for(let d=0;d<product.variants.length; d ++){
-                        if(imgColor[i].id == product.variants[d].image_id ){
-                            arrayInventory.push(product.variants[d].product_id,product.variants[d].option1,product.variants[d].option2,product.variants[d].inventory_quantity,product.variants[d].price,product.variants[d].title)                         
-                        }                       
-                    }
-
-                }   
-
-                //carga los datos del arrayInventory al dataset en ".dataInventory"
-                arrayInventory.forEach( e =>{
-                    let inv = document.createElement("div")
-                    inv.dataset.array_prod = e
-                    templateCard.querySelector('.dataInventory').appendChild(inv)
-                })               
-
-                flag = 1
-                arraydata.push('stop')
-            }
-        }
+        //Por cada opcion de color obtenido del Json almacenado en imagesColor carga las imagenes circulares de opciones - 
+        // - da tamaño al scroll dependiendo el widht de la images - agrega el array a mostrar en el carousel 
+        loadImages(imagesColor,arraydata,product)
 
         // guarda los src de todas las imagenes del producto
-        templateCard.querySelector(".srcImages").innerHTML = ''
-        for (let i = 0; i < arraydata.length; i++) {
-            var element = document.createElement("img")
-            element.dataset.img = arraydata[i]
-            templateCard.querySelector('.srcImages').appendChild(element)
-        }
+        imagesSrc(arraydata)
 
-        //carga talles
-
-               
-        var element = document.createElement("div")
-        element.className = "inventoryQuantity"
-        element.textContent = "Selecciona tu talle"
-
-        templateCard.querySelector(".inventoryQuantity").appendChild(element)
-
-        for (let i = 0; i < imagesSize.length; i++) {
-            var element = document.createElement("div")
-            element.textContent = imagesSize[i]
-            element.className = "size"
-            templateCard.querySelector(".size_product").appendChild(element)
-        }
+        //carga talles al template para mostrar              
+        showSizes (imagesSize)
         
-        //************************************************************************
-
+        //***************************************
+        //clona el template
         const clone = templateCard.cloneNode(true)
         fragment.appendChild(clone)  
-        })
 
+    })
     products.appendChild(fragment)
 }
 
+//************************************************************** FUNCTIONS ***************************************************/
+function  loadTemplate (product){ 
+    templateCard.querySelector('.description').textContent = product.body_html
+    templateCard.querySelector('#fav').dataset.id = product.id
+    templateCard.querySelector(".slider").dataset.id = product.id
 
-// EventListener 
+    // por defecto muestra el precio de la primer variante 
+    templateCard.querySelector(".price").textContent = "$"+ product.variants[0].price        
+    templateCard.querySelector(".price_compare").innerHTML = ''
+
+    if (product.variants[0].compare_at_price != null){
+        templateCard.querySelector(".price_compare").textContent = "$"+ product.variants[0].compare_at_price
+    }
+
+    templateCard.querySelector(".inventoryQuantity").innerHTML = ''
+    templateCard.querySelector(".size_product").innerHTML = ''
+
+    templateCard.querySelector("#fotos").innerHTML = ''
+    templateCard.querySelector(".images").innerHTML = ''
+    templateCard.querySelector(".srcImages").innerHTML = ''
+}
+
+
+
+//guarda los valores de las opciones 
+function  valuesOfOptions(options,imagesColor,imagesSize,flag_color,flag_size){
+    if (options != null) {
+        options.forEach(i => {
+            if (i.name.includes("Color")) {
+                i.values.forEach(c => {
+                    imagesColor.push(c)
+                    flag_color = +1
+                })
+            }
+            if (i.name.includes("Talle")) {
+                i.values.forEach(c => {
+                    imagesSize.push(c)
+                    flag_size = +1
+                })
+            }
+        })
+    }
+}
+
+function validationOptions(flag_color,flag_size,options){    //flags opciones X talle y color
+    if (flag_color == 0) {
+        console.log("No hay opciones de colores");
+    }
+    if (flag_size == 0) {
+        console.log("No hay opciones de talles");
+    }
+    if (options == "") {
+        console.log("no tiene opciones")
+    }
+}
+
+function loadImages(imagesColor,arraydata,product){
+    let flag = 0
+
+    for (let a = 0; a < imagesColor.length; a++) {
+        let imgColor = []
+        let colores = []
+
+        for (let i = 0; i < product.images.length; i++) {
+            if (product.images[i].alt == null){
+                console.log("El product =>",product.title," en la img => ", product.images[i].id," no se distingue el color. (Alt = null)"); 
+            }else{
+                let cadena = product.images[i].alt
+                let color = cadena.split('#')
+                let color2 = color.pop().toUpperCase()
+                if (imagesColor[a] == color2) {
+                    imgColor.push(product.images[i])
+                    colores.push(product.images[i],color2)                    
+                }
+            }
+        }
+
+        if(imgColor!=''){
+            //agrega images de variantes de colores (images abajo)
+            var foto = document.createElement("img")
+            foto.setAttribute("src", imgColor[0].src)
+            foto.className = "imagesContainer"
+            foto.setAttribute("id", colores[1]);
+            templateCard.querySelector('#fotos').appendChild(foto)
+        
+            // agrega primeras fotos por defecto al carrusel 
+            loadImagesCarousel(flag,imgColor,colores)
+
+            //añade tamaño del carousel=> imagen con mayor widht y longitud al boton de compra 
+            carouselWidht(imgColor)
+
+            // arrayInventory contiene => (idProducto , color , size , cantidad , price ,titulo)
+
+            
+            var arrayInventory = []
+            for (let i = 0; i < imgColor.length; i++) {
+                arraydata.push(imgColor[i].src,imgColor[i].width,imgColor[i].height)
+                for(let d=0;d<product.variants.length; d ++){
+                    if(imgColor[i].id == product.variants[d].image_id ){
+                        arrayInventory.push(product.variants[d].product_id,product.variants[d].option1,product.variants[d].option2,product.variants[d].inventory_quantity,product.variants[d].price,product.variants[d].title)                         
+                    }                       
+                }
+            }   
+
+            //carga los datos del arrayInventory al dataset en ".dataInventory"
+            arrayInventory.forEach( e =>{
+                let inv = document.createElement("div")
+                inv.dataset.array_prod = e
+                templateCard.querySelector('.dataInventory').appendChild(inv)
+            })               
+            flag = 1
+            arraydata.push('stop')
+        }
+    }
+}
+
+function imagesSrc(arraydata){
+    for (let i = 0; i < arraydata.length; i++) {
+        var element = document.createElement("img")
+        element.dataset.img = arraydata[i]
+        templateCard.querySelector('.srcImages').appendChild(element)
+    }
+}
+
+function showSizes (imagesSize){
+    var element = document.createElement("div")
+    element.className = "inventoryQuantity"
+    element.textContent = "Selecciona tu talle"
+    templateCard.querySelector(".inventoryQuantity").appendChild(element)
+
+    for (let i = 0; i < imagesSize.length; i++) {
+        var element = document.createElement("div")
+        element.textContent = imagesSize[i]
+        element.className = "size"
+        templateCard.querySelector(".size_product").appendChild(element)
+    }
+}
+
+function loadImagesCarousel(flag,imgColor,colores){
+    if (flag != 1) {
+        for (let i = 0; i < imgColor.length; i++) {
+            var element = document.createElement("img")
+            
+            element.setAttribute("src", imgColor[i].src)
+            element.className = "image"
+            element.dataset.width = imgColor[i].width*0.19
+            element.style.width = imgColor[i].width*0.19+ "px "
+            element.style.height = imgColor[i].height*0.19+ "px "                       
+            element.setAttribute("id", colores[1]) 
+            templateCard.querySelector(".images").appendChild(element)    
+
+        }   
+    }
+}
+
+function carouselWidht(imgColor){
+    
+    var carousel =templateCard.querySelector('.carousel')
+    let flagWidht = imgColor[0].height
+    let id = 0               
+
+    for (let i=0 ; i <imgColor.length; i++){
+        if(imgColor[i].height> flagWidht){                        
+            id = i
+        }
+    }
+    carousel.style.width =  imgColor[id].width*0.19 +"px"
+    carousel.style.height = imgColor[id].height*0.19+ "px"
+    templateCard.querySelector(".btn-dark").style.width = imgColor[id].width*0.18 +"px"
+    templateCard.querySelector(".size_product").style.width = (imgColor[id].width*0.18)/2 +"px"            
+    templateCard.querySelector(".size_product").dataset.width=(imgColor[id].width*0.18)/2 
+    templateCard.querySelector(".inventoryQuantity").style.width = (imgColor[id].width*0.18)/2 +"px"
+    templateCard.querySelector(".inventoryQuantity").dataset.width=(imgColor[id].width*0.18)/2 
+}
+
+
+// ***************************************************************** EVENTLISTENER  ****************************************************************************************// 
 products.addEventListener("click", i => {
     favFunction(i)
     scrollImages(i)  //cambia imagenes por seleccion 
@@ -196,12 +228,15 @@ products.addEventListener("click", i => {
 products.addEventListener("mouseover", i =>{
     hoverSize(i)
     carousel(i)
-
 })
 
-document.addEventListener("click", i =>{
+document.addEventListener("mouseover", i =>{
     document.querySelector(".favoriteAlert").style = "display:none;"
 })
+
+
+
+//---------------------Function event listener--------------//
 
 // show inventory quantity per size
 const hoverSize = h =>{
@@ -238,7 +273,6 @@ const setInventory_quantity = h =>{
         show.style="color:rgb(204, 131, 78);"
         show.style.width= show.dataset.width +"px"
         show.textContent= "Pocas unidades"
-
     }
     if(inventory > 4){         
         show.style="color:#2CB812;"
@@ -272,30 +306,23 @@ const carousel2 = e =>{
     } 
 
     function  moveCarrousel(){
-
         if (index > images.childNodes.length -1){
             index = 0 
         } else if (index < 0){
             index = images.childNodes.length -1
-        }
-        
-
-        images.style.transform = `translateX(-${index * imageWidht}px)`     //*********************************************** VER */
-    
+        }      
+        images.style.transform = `translateX(-${index * imageWidht}px)`         
     }
     //Nav btn 
     function prevSlide (){
         index -- 
         resetInterval()
         moveCarrousel()
-     //   console.log(images.childNodes[index])
     }
     function nextSlide (){
         index ++
         resetInterval()
         moveCarrousel()
-     //   console.log(images.childNodes[index])
-
     }
     function resetInterval(){
         clearInterval(interval)
@@ -322,8 +349,7 @@ const addtalle = e => {
             price = object.querySelector(".dataInventory").childNodes[i+4].dataset.array_prod
             title = object.querySelector(".dataInventory").childNodes[i+5].dataset.array_prod
         }
-    }
-    
+    }    
     const product = {
         id_product: object.dataset.id,
         inventory_quantity: inventory,
@@ -335,7 +361,7 @@ const addtalle = e => {
     console.log("agregado al carrito", product)
 }
 
-//change array image carousel
+//change array images carousel
 const scrollImages = e => {
     if (e.target.classList.contains('imagesContainer')) {
         setImagen(e.target, e.target.parentElement)
@@ -344,9 +370,7 @@ const scrollImages = e => {
 }
 const setImagen = (img, object) => {
     let data = object.parentElement.parentElement.querySelector('.srcImages')
-    console.log(data);
     let array = []
-    console.log("tuki");
 
     for (let i = 0; i < data.childNodes.length; i++) {
         let count = 0
@@ -367,9 +391,7 @@ const setImagen = (img, object) => {
     }
 
     object.parentElement.parentElement.querySelector(".images").innerHTML = ''
-    console.log("ARRAY",array);
     for (let i =0 ; i <array.length; i++) {
-        console.log("I",i);
         var element = document.createElement("img")
         element.setAttribute("src",array[i] )
         element.className = "image"
@@ -393,40 +415,14 @@ const favFunction = e => {
     fav1.style="display:content;"
     const fav2 = object.querySelector('#fav')
     fav2.style = "display:none;"
+
+
+
     const id = object.querySelector('#fav').dataset.id;
+
     const favoriteAlert = document.querySelector(".favoriteAlert")
     favoriteAlert.textContent= "¡ Agregado a favoritos !"
     favoriteAlert.style="display:flex;"
     console.log("Agregado a favoritos ID nro:", id)
 } 
 
-
-
-
-/* 
-products.addEventListener('click',e =>{
-    addCarrito(e)
-})
-//agrega al carrito 
-const addCarrito = e =>{
-    console.log(e.target.classList.contains('btn-dark'));
-  if(e.target.classList.contains('btn-dark')){
-        setShoppingCard(e.target.parentElement)
-    }
-   e.stopPropagation(e.target.parentElement)
-}
-
-
-const setShoppingCard = object => {
-    const product ={
-        id: object.querySelector('.card_button').dataset.id,
-        cantidad : 1
-    }
-    if (shoppingCart.hasOwnProperty(product.id)){
-        product.cantidad = shoppingCart[product.id].cantidad + 1
-    }
-    shoppingCart[product.id] = {...product}
-    console.log("PRODUCT",product)
-}
-
-  */

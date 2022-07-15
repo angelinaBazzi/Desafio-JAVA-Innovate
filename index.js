@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Trae los productos del .json
 const fetchData = async () => {
     try {
-        const res = await fetch('./products.json')
+        const res = await fetch('./data/products.json')
         const data = await res.json()     
         allProducts= data.products
     }

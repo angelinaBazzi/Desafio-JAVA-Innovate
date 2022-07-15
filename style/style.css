@@ -144,16 +144,13 @@
 }
 
 .btn-dark{
-    height: 40px;
-
+    height: 35px;
 }
 .carrito{
-    margin-top: -8px;
+    margin-top: -10px;
     font-size: 75%;
-
 }
-.talles{
-    
+.talles{    
     font-size: 75%;
 }
 
@@ -169,7 +166,6 @@
     width: 100%;
     padding-left: 5px;    
 }
-
 
   .card_button a span:first-child {
     display: inline-block;
@@ -240,19 +236,23 @@
 
 /* Carousel */
 .carousel{
-    height: auto;
     overflow: hidden;
     align-content: center;
     padding: auto;
     margin: auto;
-    width: auto;
+    display: flex;
+    object-fit: fill;
 }
 .images{    
-    object-fit: cover;
     margin-right: 0px;
     display: flex;
     transform: translateY(0);
     transition: transform 1s ease-in-out;
+    height: 100%;
+}
+.image{
+    margin:auto;
+    display: flex;
 }
 
 /*Controls*/
@@ -263,14 +263,13 @@
     justify-content: space-between;
     max-width: 1000px;
     width: 100%;
-    color: #929292;
+    color: #e8e1e1;
     border: none;    
 }
 .btn{
-     cursor: pointer;
-     border: none;
-    
-    }
+    cursor: pointer;
+    border: none;
+}
 
 /* Price */
 .prueba{
@@ -297,7 +296,6 @@
     padding-top: 10px;
     bottom: 0px;
 }
-
 
 .button_pagination{
     display: flex;
