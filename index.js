@@ -1,5 +1,5 @@
 
-import{products_per_page} from "./products_per_page.js";
+import{products_per_page} from "./modules/products_per_page.js";
 
 
 let allProducts = ''
