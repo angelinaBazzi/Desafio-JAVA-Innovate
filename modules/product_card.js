@@ -21,12 +21,13 @@ export const card_product = data => {
         //tamaño del carrosel
         carouselWidht()
 
-        //carga img variantes
-        loadImagesVariants(product.options[0].values,product)
-
-        //carga talles del product
-        showSizes (product.options[1].values)
-            
+        if(product.options.values != ''){
+            //carga img variantes
+            loadImagesVariants(product)
+        
+            //carga talles del product
+            showSizes (product.options[1].values)            
+        }
         
         //***************************************
 
@@ -86,8 +87,8 @@ function loadImagesCarousel (product) {
     templateCard.querySelector(".slider").dataset.color = color2
 }
 
-function loadImagesVariants(imagesColor,product){
-    for (let a = 0; a < imagesColor.length; a++) {
+function loadImagesVariants(product){
+    for (let a = 0; a < product.options[0].values.length; a++) {
         let colors = []
 
         for (let i = 0; i < product.images.length; i++) {
@@ -95,7 +96,7 @@ function loadImagesVariants(imagesColor,product){
                 let cadena = product.images[i].alt
                 let color = cadena.split('#')
                 let color2 = color.pop().toUpperCase()
-                if (imagesColor[a] == color2) {
+                if (product.options[0].values[a] == color2) {
                     colors.push(product.images[i],color2)                    
                 }
             }

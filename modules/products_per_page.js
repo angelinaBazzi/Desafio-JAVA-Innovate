@@ -4,7 +4,7 @@ import{card_product} from "./product_card.js";
 const btn_prev = document.getElementById("btn_prev")
 const btn_next = document.getElementById("btn_next")
 
-let quantityOfProducts = 5
+let quantityOfProducts = 100
 const data_quantityOfProducts = new Map()
 let index = 0 
 let page = 0      
@@ -47,7 +47,7 @@ function changeProducts(allProducts,ind,flag){
 function setPage(p,np){
     document.querySelector(".nro_pages").textContent = p +" de "+ (np+1)
     if(p  == (np+1)){
-        btn_next.style = "opacity: 0.2;"
+        btn_next.style = "opacity: 0.0;"
     }
 }   
 
