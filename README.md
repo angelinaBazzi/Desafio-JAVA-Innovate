@@ -1,4 +1,4 @@
-# Desafio-JAVA-Innovate
+# Desafio-JavaScript-Innovate
 
 
 # Objetivo:
