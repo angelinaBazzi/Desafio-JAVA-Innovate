@@ -1,8 +1,13 @@
+
+::-webkit-scrollbar {
+    display: none;
+}
 .card{
     margin-left: auto;
     margin-right: auto;
     font-size: 11px;
     font-family: 'Roboto';
+    
 }
 .card__body{
     background-color: #F9F9F9;
@@ -11,9 +16,9 @@
     margin-right: auto;
 }
 .card__product{
-    margin-top: 30px;
-    margin-left: 10px ;
+    margin: 10px;
     justify-content: center;
+    margin-top: 30px;
 }
 .head{
     background-color: rgb(0, 0, 0);
@@ -129,10 +134,15 @@
     height: 440px;
     color: chocolate;
 }
+.imagesVariants{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
 .imagesContainer{
-    width: 35px;
+    width: 40px;
     border-radius:50%;
-    height: 35px;
+    height: 40px;
     margin: 5px;
 }
 .card_button {
@@ -145,6 +155,7 @@
 
 .btn-dark{
     height: 35px;
+    width: 240px;
 }
 .carrito{
     margin-top: -10px;
@@ -202,12 +213,7 @@
   .card_button [data-animation="to-top"] a span:last-child {
     transform: translateY(100%);
   }
-
-
-
-.slider:hover .images {
-    -webkit-transform:scale(1.1);transform:scale(1.1);
-}
+  
 .slider {
     overflow:hidden;
     position: relative;
@@ -223,7 +229,6 @@
     visibility: visible;
   }
 
-
   /* Fav */
 .fav{
     position: absolute;
@@ -236,23 +241,26 @@
 
 /* Carousel */
 .carousel{
+    align-content: center;
     overflow: hidden;
     align-content: center;
-    padding: auto;
-    margin: auto;
+    margin: auto;    
     display: flex;
-    object-fit: fill;
+    margin-top: auto;
+    margin-bottom: auto;    
 }
 .images{    
-    margin-right: 0px;
-    display: flex;
     transform: translateY(0);
-    transition: transform 1s ease-in-out;
-    height: 100%;
+    display: inline-flex;
+    transition: transform 0.5s ease-in-out;
+    
 }
 .image{
-    margin:auto;
     display: flex;
+    width: 100%;
+    position: relative;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 /*Controls*/
@@ -261,10 +269,12 @@
     position: absolute;
     margin-top:-60%;
     justify-content: space-between;
-    max-width: 1000px;
-    width: 100%;
-    color: #e8e1e1;
-    border: none;    
+    width: 230px;
+    margin-left:10px ;
+    border: none;   
+    height: 100%;
+    cursor: pointer;
+
 }
 .btn{
     cursor: pointer;
@@ -272,16 +282,16 @@
 }
 
 /* Price */
-.prueba{
+.card_price{
     display: flex;
-    justify-content: space-between;
-}
-.price{
-    margin: 7px;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 .price_compare{
     color: #DF1212;
-    margin: 7px;
+    margin-right: 10px;
     text-decoration:line-through;
 }
 /* favoriteAlert */
@@ -296,7 +306,6 @@
     padding-top: 10px;
     bottom: 0px;
 }
-
 .button_pagination{
     display: flex;
     justify-content: space-between;
@@ -305,11 +314,13 @@
     margin-left: auto;
     margin-right: auto;
 }
-#btn_prev{
-    background: none;
+
+.pagination{
     border: none;
+    background: none;
 }
-#btn_next{
-    background: none;
-    border: none;
+.description {
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }

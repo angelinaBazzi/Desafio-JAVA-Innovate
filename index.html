@@ -45,8 +45,8 @@
             <div class="card__body">
                 <div class="card__breadcrumb">Inicio  |</div>
                 <div class="card__description">
-                    <div class=" card__descripcion title"><b>Mujer</b></div>
-                    <div class="card__description text">Tenemos ropa de mujer para cada ocasión y temporada. Desde leggins hasta sudaderas con capucha, sombreros de pescador y chaquetas bomber.</div>
+                  <div class=" card__descripcion title"><b>Mujer</b></div>
+                  <div class="card__description text">Tenemos ropa de mujer para cada ocasión y temporada. Desde leggins hasta sudaderas con capucha, sombreros de pescador y chaquetas bomber.</div>
                 </div>
                 <div class="card__filters">
                     <div class="card__filters options">
@@ -140,6 +140,7 @@
                                     <div>  
                                         <!-- Carousel  -->
                                         <main class="carousel">
+
                                             <!-- Images -->
                                             <div class="slider">
                                                 <div class="dataInventory"></div>
@@ -147,35 +148,38 @@
                                                 </article>
                                                 <!-- Controls -->
                                                 <nav class="controls">
-                                                  <button class="btn prev"><span class="material-symbols-outlined" style="color: #e8e1e1;">
-                                                      arrow_back_ios</span>
-                                                  </button>
-                                                  <button class="btn next">
-                                                      <span class="material-symbols-outlined" style="color: #e8e1e1;">
-                                                          arrow_forward_ios</span>
-                                                  </button>
+                                                  <div class="prev" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" width="6.541" height="13" viewBox="0 0 6.541 13">
+                                                    <path id="arrow-ios-forward-fill" d="M19.11,20.454a.926.926,0,0,0,.713-1.519l-4.151-4.966,4-4.975a.947.947,0,1,0-1.492-1.167l-4.475,5.559a.927.927,0,0,0,0,1.177l4.633,5.559A.927.927,0,0,0,19.11,20.454Z" transform="translate(-13.497 -7.456)"/>
+                                                  </svg>
+                                                  
+                                                  </div>
+                                                  <div class="next" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" width="6.541" height="13" viewBox="0 0 6.541 13">
+                                                    <path id="arrow-ios-forward-fill" d="M14.426,20.455a.926.926,0,0,1-.713-1.519l4.151-4.966-4-4.975a.947.947,0,1,1,1.492-1.167l4.475,5.559a.927.927,0,0,1,0,1.177l-4.633,5.559A.927.927,0,0,1,14.426,20.455Z" transform="translate(-13.497 -7.456)"/>
+                                                  </svg>
+                                                  
+                                                  </div>
                                                 </nav>
+                                                
                                                 <!--  Shopping button -->
                                                 <div class="shoppingButton">
                                                     <section class="card_button">
-                                                        <div>
-                                                            <a>
-                                                                <button class="btn btn-dark">
-                                                                    <span class="carrito">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" viewBox="0 0 16 20">
-                                                                            <path id="cart" d="M10,17h8a1,1,0,1,1,0,2H9a1,1,0,0,1-1-1V5H7A1,1,0,0,1,7,3H9a1,1,0,0,1,1,1V6h9.927A2.037,2.037,0,0,1,22,8a1.948,1.948,0,0,1-.05.434l-1.151,5A2.057,2.057,0,0,1,18.775,15H10Zm-.5,6A1.5,1.5,0,1,1,11,21.5,1.5,1.5,0,0,1,9.5,23Zm9,0A1.5,1.5,0,1,1,20,21.5,1.5,1.5,0,0,1,18.5,23ZM10,8v5h8.831L20,8Z" transform="translate(-6 -3)" fill="#fff" fill-rule="evenodd"/>
-                                                                          </svg>
-                                                                         Añadir al carrito
-                                                                    </span>
+                                                      <div>
+                                                        <a>
+                                                          <button class="btn btn-dark">
+                                                            <span class="carrito">
+                                                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" viewBox="0 0 16 20">
+                                                                <path id="cart" d="M10,17h8a1,1,0,1,1,0,2H9a1,1,0,0,1-1-1V5H7A1,1,0,0,1,7,3H9a1,1,0,0,1,1,1V6h9.927A2.037,2.037,0,0,1,22,8a1.948,1.948,0,0,1-.05.434l-1.151,5A2.057,2.057,0,0,1,18.775,15H10Zm-.5,6A1.5,1.5,0,1,1,11,21.5,1.5,1.5,0,0,1,9.5,23Zm9,0A1.5,1.5,0,1,1,20,21.5,1.5,1.5,0,0,1,18.5,23ZM10,8v5h8.831L20,8Z" transform="translate(-6 -3)" fill="#fff" fill-rule="evenodd"/>
+                                                              </svg>
+                                                                  Añadir al carrito
+                                                            </span>
 
-                                                                    <span class="talles">
-                                                                      <div class="inventoryQuantity"></div>
-
-                                                                      <div class="size_product"></div>
-                                                                    </span>
-                                                                </button>
-                                                            </a>
-                                                        </div>
+                                                            <span class="talles">
+                                                              <div class="inventoryQuantity"></div>
+                                                              <div class="size_product"></div>
+                                                            </span>
+                                                          </button>
+                                                        </a>
+                                                      </div>
                                                     </section>
                                                 </div>
                                             </div>
@@ -189,15 +193,13 @@
                                         </main>
                                     </div>
                                     
-                                    <div class="srcImages"></div>
                                     <div class="body">
-                                        <div class="prueba">
-                                            <div class="description" id="a1"></div>
-                                            <b><div class="price_compare"></div></b>
-                                            <b><div class="price"></div></b>
-
-                                        </div>
-                                        <div class="imagesVariants" id="fotos"></div>
+                                      <div class="description" id="a1"></div>
+                                      <div class = "card_price">
+                                        <b><div class="price_compare"></div></b>
+                                        <b><div class="price"></div></b>
+                                      </div>
+                                      <div class="imagesVariants" id="fotos"></div>
                                     </div>
                                 </div>
                             </div>

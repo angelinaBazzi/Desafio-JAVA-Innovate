@@ -4,7 +4,7 @@ import{card_product} from "./product_card.js";
 const btn_prev = document.getElementById("btn_prev")
 const btn_next = document.getElementById("btn_next")
 
-let quantityOfProducts = 10
+let quantityOfProducts = 5
 const data_quantityOfProducts = new Map()
 let index = 0 
 let page = 0      
@@ -18,7 +18,6 @@ export const products_per_page = (allProducts) => {
 
 /************************************* functions **********************************************************/
 function changeProducts(allProducts,ind,flag){
-
     data_quantityOfProducts.clear()
     if(ind >= 0){
         if(flag=="next"){
@@ -26,7 +25,6 @@ function changeProducts(allProducts,ind,flag){
             }else{
             page--
         }
-
         for (let i = ind ; i< (ind+quantityOfProducts) ; i++){
             data_quantityOfProducts.set(i,allProducts[i])
         }
@@ -47,7 +45,10 @@ function changeProducts(allProducts,ind,flag){
 
 
 function setPage(p,np){
-    document.querySelector(".nro_pages").textContent = p +" de "+ np 
+    document.querySelector(".nro_pages").textContent = p +" de "+ (np+1)
+    if(p  == (np+1)){
+        btn_next.style = "opacity: 0.2;"
+    }
 }   
 
 
