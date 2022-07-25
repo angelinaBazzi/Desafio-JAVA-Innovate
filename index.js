@@ -4,11 +4,6 @@ import{products_per_page} from "./modules/products_per_page.js";
 
 let allProducts = ''
 
-//Es disparado cuando el documento HTML se cargo completamente 
-document.addEventListener('DOMContentLoaded', () => {
-    fetchData()
-})
-
 // Trae los productos del .json
 const fetchData = async () => {
     try {
@@ -23,5 +18,5 @@ const fetchData = async () => {
      products_per_page(allProducts)
 }
 
-
-
+//Es disparado cuando el documento HTML se cargo completamente 
+document.addEventListener('DOMContentLoaded', fetchData)

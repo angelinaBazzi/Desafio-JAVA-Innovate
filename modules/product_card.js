@@ -1,4 +1,4 @@
-import { } from "./eventListener.js"
+import "./eventListener.js"
 
 const products = document.getElementById('products')
 const templateCard = document.getElementById('template-card').content
@@ -88,7 +88,10 @@ function loadImagesCarousel (product) {
 }
 
 function loadImagesVariants(product){
-    for (let a = 0; a < product.options[0].values.length; a++) {
+    const colorOptions = product.options.find( x => x.name.toLowerCase() === 'color' )
+    if ( !!!colorOptions ) return
+
+    colorOptions.values.forEach( value => {
         let colors = []
 
         for (let i = 0; i < product.images.length; i++) {
@@ -96,7 +99,7 @@ function loadImagesVariants(product){
                 let cadena = product.images[i].alt
                 let color = cadena.split('#')
                 let color2 = color.pop().toUpperCase()
-                if (product.options[0].values[a] == color2) {
+                if (value == color2) {
                     colors.push(product.images[i],color2)                    
                 }
             }
@@ -110,7 +113,7 @@ function loadImagesVariants(product){
             templateCard.querySelector('#fotos').appendChild(foto)
             dataInventory(colors,product)             
         }
-    }
+    })
 }
 
 function dataInventory(colors,product){
@@ -124,6 +127,7 @@ function dataInventory(colors,product){
         }
     }       
     //carga los datos del arrayInventory al dataset en ".dataInventory"
+    templateCard.querySelector('.dataInventory').innerHTML = ''
     arrayInventory.forEach( e =>{
         let inv = document.createElement("div")
         inv.dataset.array_prod = e

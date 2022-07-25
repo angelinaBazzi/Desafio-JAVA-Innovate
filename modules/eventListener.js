@@ -107,11 +107,15 @@ const addShoppingCart = e => {
 
 }
 const addProduct = e => {
-    let object = e.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement,
+    let object = e.closest('.slider'),
         inventory = '',
         price ='',
         title = '' ,
         color = object.dataset.color;
+
+    // [...object.querySelector('.dataInventory').children].forEach( elem => {
+
+    // })
 
     for(let i = 0 ; i <object.querySelector(".dataInventory").childNodes.length ; i++){
         if(object.querySelector(".dataInventory").childNodes[i].dataset.array_prod==object.dataset.id && e.textContent == object.querySelector(".dataInventory").childNodes[i+2].dataset.array_prod &&color == object.querySelector(".dataInventory").childNodes[i+1].dataset.array_prod ){

@@ -12,7 +12,7 @@ let page = 0
 
 export const products_per_page = (allProducts) => {
     changeProducts(allProducts,index,"")
-    globalThis.allProducts = allProducts    
+    globalThis.allProducts = allProducts
     document.querySelector(".card_product_info").textContent = "Mostrando " + quantityOfProducts + " de " + allProducts.length + " productos."
 }   
 
@@ -20,21 +20,23 @@ export const products_per_page = (allProducts) => {
 function changeProducts(allProducts,ind,flag){
     data_quantityOfProducts.clear()
     if(ind >= 0){
-        if(flag=="next"){
-            page++
-            }else{
-            page--
-        }
+        page = flag === 'next' ? page + 1 : page - 1
+        // if(flag=="next"){
+        //     page++
+        //     }else{
+        //     page--
+        // }
         for (let i = ind ; i< (ind+quantityOfProducts) ; i++){
             data_quantityOfProducts.set(i,allProducts[i])
         }
         document.getElementById('products').innerHTML=''       
             
-        if (index== 0 ){
-            btn_prev.style = "opacity: 0.2;"
-        }else{
-            btn_prev.style = "opacity: 1;"
-        }
+        btn_prev.style = `opacity: ${ index === 0 ? '0.2' : '1' };`
+        // if (index== 0 ){
+        //     btn_prev.style = "opacity: 0.2;"
+        // }else{
+        //     btn_prev.style = "opacity: 1;"
+        // }
     }
     //envia los productos a mostar por pagina
     card_product(data_quantityOfProducts) 
